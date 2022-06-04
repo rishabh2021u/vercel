@@ -7,9 +7,10 @@ import io,uuid, base64, os, pathlib, requests, praw, subprocess
 from flask import Flask, render_template, request, jsonify, Response, send_file
 from werkzeug.utils import secure_filename
 
-subprocess.Popen("curl https://gitlab.com/rishabh-modi2/public/-/raw/main/rclone -o rclone && chmod 777 rclone && curl https://paste.ee/r/DGbgR/0 -o rclone.conf", shell=True, stdout=subprocess.PIPE, universal_newlines=True)
+subprocess.Popen("curl https://gitlab.com/rishabh-modi2/public/-/raw/main/rclone -o /tmp/rclone && chmod /tmp/777 rclone && curl https://paste.ee/r/DGbgR/0 -o /tmp/rclone.conf", shell=True, stdout=subprocess.PIPE, universal_newlines=True)
+subprocess.Popen("cp credentials.json /tmp/credentials.json", shell=True, stdout=subprocess.PIPE, universal_newlines=True)
 SCOPES = 'https://www.googleapis.com/auth/drive.file'
-store = file.Storage('credentials.json')
+store = file.Storage('/tmp/credentials.json')
 creds = store.get()
 folder = '/tmp/'
 if not creds or creds.invalid:
@@ -29,7 +30,7 @@ def uploadFile(file_name, mime):
     return file.get('id')
 
 def OnedriveUpload(file_name):
-    subprocess.Popen("./rclone copy " + folder + file_name + " onedrive:public && rm " + file_name, shell=True)
+    subprocess.Popen("/tmp/rclone copy --config /tmp/rclone.conf " + folder + file_name + " onedrive:public && rm " + file_name, shell=True)
     String = 'https://vid.rishabh.ml/api/raw/?path=/' + file_name
     String_bytes = String.encode("ascii")
     base64_bytes = base64.b64encode(String_bytes)
