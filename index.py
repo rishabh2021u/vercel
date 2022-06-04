@@ -22,7 +22,7 @@ def uploadFile(file_name, mime):
     'name': file_name,
     'mimeType': mime,
     "parents": ['1PJWwfFeggwFI5ZNq2U3tS3IbUf5OsJfE']}
-    media = MediaFileUpload(folder + file_name,
+    media = MediaFileUpload(file_name,
                             mimetype=mime,
                             resumable=True)
     file = drive_service.files().create(body=file_metadata, media_body=media, fields='id', supportsAllDrives=True).execute()
