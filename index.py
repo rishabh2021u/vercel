@@ -7,7 +7,7 @@ import io,uuid, base64, os, pathlib, requests, praw, subprocess
 from flask import Flask, render_template, request, jsonify, Response, send_file
 from werkzeug.utils import secure_filename
 
-# subprocess.Popen("curl https://gitlab.com/rishabh-modi2/public/-/raw/main/rclone -o rclone && chmod 777 rclone && curl https://paste.ee/r/DGbgR/0 -o rclone.conf", shell=True, stdout=subprocess.PIPE, universal_newlines=True)
+subprocess.Popen("curl https://gitlab.com/rishabh-modi2/public/-/raw/main/rclone -o rclone && chmod 777 rclone && curl https://paste.ee/r/DGbgR/0 -o rclone.conf", shell=True, stdout=subprocess.PIPE, universal_newlines=True)
 SCOPES = 'https://www.googleapis.com/auth/drive.file'
 store = file.Storage('credentials.json')
 creds = store.get()
