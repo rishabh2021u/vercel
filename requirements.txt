@@ -6,3 +6,4 @@ google-auth-oauthlib
 werkzeug
 oauth2client
 apiclient
+praw
