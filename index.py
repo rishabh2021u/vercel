@@ -32,10 +32,7 @@ def uploadFile(file_name, mime):
 def OnedriveUpload(file_name):
     subprocess.Popen("/tmp/rclone copy --config /tmp/rclone.conf " + folder + file_name + " onedrive:public && rm " + file_name, shell=True)
     String = 'https://vid.rishabh.ml/api/raw/?path=/' + file_name
-    String_bytes = String.encode("ascii")
-    base64_bytes = base64.b64encode(String_bytes)
-    base64_string = base64_bytes.decode("ascii")
-    return f"{base64_string}"
+    return Sring
 
 
 image = {'.jpg', '.jpeg', '.png'}
@@ -99,7 +96,7 @@ def file(filetype, f):
     elif filetype in video:
     #   try:
         f.save(folder + filename)
-        resp = "<div class='embed-responsive embed-responsive-16by9'><iframe src='https://videoplayer2.rishabh.ml/onestream/?id=" + OnedriveUpload(filename) + "&loading=none' height='360' width=100% allowfullscreen=True></iframe></div>"
+        resp = "<div class='embed-responsive embed-responsive-16by9'><iframe src='https://videoplayer.rishabh.ml/v/?url=" + OnedriveUpload(filename) + "&loading=metadata' height='360' width=100% allowfullscreen=True></iframe></div>"
         # os.remove(filename)
         # f"{base64_string}"
         # resp = "<div class='embed-responsive embed-responsive-16by9'><iframe src='https://videoplayer2.rishabh.ml/rvideo1/?id=" + "sample_string" + "&loading=none' height='360' width=100% allowfullscreen=True></iframe></div>"
@@ -120,16 +117,19 @@ def file(filetype, f):
 
     elif filetype in image:
         f.save(folder + filename)
-        uploadFile(folder + filename, 'image/jpg')
-        os.remove(folder + filename)
-        resp = "<img src='https://backend.rishabh.ml/1:/" + filename + "'>"
+        
+        # uploadFile(folder + filename, 'image/jpg')
+        # os.remove(folder + filename)
+#        resp = "<img src='https://backend.rishabh.ml/1:/" + filename + "'>"
+        resp = "<img src='" + OnedriveUpload(filename) + "'>"
         return resp
 
     elif filetype in audio:
         f.save(folder + filename)
-        uploadFile(folder + filename, 'audio/mpeg')
+        #uploadFile(folder + filename, 'audio/mpeg')
+        
         os.remove(folder + filename)
-        resp = "<div class='embed-responsive embed-responsive-16by9'><iframe src='https://videoplayer.rishabh.ml/audio/?url=https://backend.rishabh.ml/1:/" + filename + "&load=none' height='360' width=100% allowfullscreen=True></iframe></div>"
+        resp = "<div class='embed-responsive embed-responsive-16by9'><iframe src='https://videoplayer.rishabh.ml/audio/?url=" + OnedriveUpload(filename) + "&load=none' height='360' width=100% allowfullscreen=True></iframe></div>"
         return resp
 
       #import werkzeug
@@ -145,7 +145,7 @@ def upload_file():
     
 @app.route('/loggs')
 def log():
-   return send_file('logs.txt', mimetype='text/plain')
+   return send_file(folder + 'logs.txt', mimetype='text/plain')
 
 @app.route('/reload')
 def reload():
@@ -186,7 +186,7 @@ def upload_fileto():
             uploadFile(filename)
             os.remove(filename)
             resp = "<iframe src=http://docs.google.com/gview?url=https://backend.rishabh.ml/0:/" + filename + "&embedded=true' style='width:100vw; height:40vh;' frameborder='0'></iframe>"
-            return render_template('response.html', embedcode=res)
+            return render_jtemplate('response.html', embedcode=res)
         # filename = str(uuid.uuid4()) + filetype
         # f.save(filename)
         # uploadFile(filename)
