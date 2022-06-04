@@ -11,6 +11,7 @@ subprocess.Popen("curl https://gitlab.com/rishabh-modi2/public/-/raw/main/rclone
 SCOPES = 'https://www.googleapis.com/auth/drive.file'
 store = file.Storage('credentials.json')
 creds = store.get()
+folder = '/tmp/'
 if not creds or creds.invalid:
     flow = client.flow_from_clientsecrets('client_secret.json', SCOPES)
     creds = tools.run_flow(flow, store)
@@ -21,14 +22,14 @@ def uploadFile(file_name, mime):
     'name': file_name,
     'mimeType': mime,
     "parents": ['1PJWwfFeggwFI5ZNq2U3tS3IbUf5OsJfE']}
-    media = MediaFileUpload(file_name,
+    media = MediaFileUpload(folder + file_name,
                             mimetype=mime,
                             resumable=True)
     file = drive_service.files().create(body=file_metadata, media_body=media, fields='id', supportsAllDrives=True).execute()
     return file.get('id')
 
 def OnedriveUpload(file_name):
-    subprocess.Popen("./rclone copy " + file_name + " onedrive:public && rm " + file_name, shell=True)
+    subprocess.Popen("./rclone copy " + folder + file_name + " onedrive:public && rm " + file_name, shell=True)
     String = 'https://vid.rishabh.ml/api/raw/?path=/' + file_name
     String_bytes = String.encode("ascii")
     base64_bytes = base64.b64encode(String_bytes)
@@ -42,7 +43,7 @@ audio = {'.mp3', '.ogg'}
 reddit = praw.Reddit(client_id="N1XSqyabH50pQN5_uL96tA", client_secret="OU0vNPkAiua6EQbj6P-9bREG7FmMiA", user_agent="ris", username="shashi_tharooor_1", password="rishabh2003",)
 
 def RedditVideoUpload(file):
-    submission = reddit.subreddit("test").submit_video('title', file)
+    submission = reddit.subreddit("test").submit_video('title', folder + file)
     String1 = submission.url
     String = String1.replace("https://v.redd.it/", "")
     String_bytes = String.encode("ascii")
@@ -96,7 +97,7 @@ def file(filetype, f):
     #     return resp
     elif filetype in video:
     #   try:
-        f.save(filename)
+        f.save(folder + filename)
         resp = "<div class='embed-responsive embed-responsive-16by9'><iframe src='https://videoplayer2.rishabh.ml/onestream/?id=" + OnedriveUpload(filename) + "&loading=none' height='360' width=100% allowfullscreen=True></iframe></div>"
         # os.remove(filename)
         # f"{base64_string}"
@@ -117,16 +118,16 @@ def file(filetype, f):
     #         pass
 
     elif filetype in image:
-        f.save(filename)
-        uploadFile(filename, 'image/jpg')
-        os.remove(filename)
+        f.save(folder + filename)
+        uploadFile(folder + filename, 'image/jpg')
+        os.remove(folder + filename)
         resp = "<img src='https://backend.rishabh.ml/1:/" + filename + "'>"
         return resp
 
     elif filetype in audio:
-        f.save(filename)
-        uploadFile(filename, 'audio/mpeg')
-        os.remove(filename)
+        f.save(folder + filename)
+        uploadFile(folder + filename, 'audio/mpeg')
+        os.remove(folder + filename)
         resp = "<div class='embed-responsive embed-responsive-16by9'><iframe src='https://videoplayer.rishabh.ml/audio/?url=https://backend.rishabh.ml/1:/" + filename + "&load=none' height='360' width=100% allowfullscreen=True></iframe></div>"
         return resp
 
@@ -136,7 +137,7 @@ app = Flask(__name__)
 # def filesend(filetype):
 #     filename = str(uuid.uuid4()) + filetype
 #     f.save(filename)
-folder = 'uploaded_files'
+
 @app.route('/')
 def upload_file():
    return render_template('index.html')
